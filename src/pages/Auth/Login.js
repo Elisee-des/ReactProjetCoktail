@@ -1,6 +1,36 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  // const [username, setUsername] = useState("Elisee");
+  // const [password, setPassword] = useState("0000");
+
+  let navigate = useNavigate();
+  const [credentials, setCredentials] = useState({
+    email: "esabidani@gmail.com",
+    password: "user",
+  });
+
+  const handChange = (e) => {
+    setCredentials({
+      ...credentials,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handSubmit = (e) => {
+    e.preventDefault();
+    console.log(credentials);
+    axios
+      .post("http://localhost:8000/auth/login", credentials)
+      .then((res) => {
+        console.log(res);
+        navigate("/admin");
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <main>
       <div className="container">
@@ -29,39 +59,41 @@ const Login = () => {
                       </p>
                     </div>
 
-                    <form className="row g-3 needs-validation" novalidate>
+                    <form
+                      onSubmit={handSubmit}
+                      className="row g-3 needs-validation"
+                      noValidate
+                    >
                       <div className="col-12">
-                        <label for="yourUsername" className="form-label">
-                          Username
+                        <label htmlFor="youremail" className="form-label">
+                          Email
                         </label>
                         <div className="input-group has-validation">
-                          <span
-                            className="input-group-text"
-                            id="inputGroupPrepend"
-                          >
-                            @
-                          </span>
                           <input
                             type="text"
-                            name="username"
+                            name="email"
                             className="form-control"
-                            id="yourUsername"
+                            value={credentials.email}
+                            onChange={handChange}
+                            id="youremail"
                             required
                           />
                           <div className="invalid-feedback">
-                            Please enter your username.
+                            Please enter your email.
                           </div>
                         </div>
                       </div>
 
                       <div className="col-12">
-                        <label for="yourPassword" className="form-label">
+                        <label htmlFor="yourPassword" className="form-label">
                           Password
                         </label>
                         <input
                           type="password"
                           name="password"
                           className="form-control"
+                          value={credentials.password}
+                          onChange={handChange}
                           id="yourPassword"
                           required
                         />
@@ -79,7 +111,10 @@ const Login = () => {
                             value="true"
                             id="rememberMe"
                           />
-                          <label className="form-check-label" for="rememberMe">
+                          <label
+                            className="form-check-label"
+                            htmlFor="rememberMe"
+                          >
                             Remember me
                           </label>
                         </div>
