@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { accountService } from "@/_services/account.service";
 
 const Login = () => {
   // const [username, setUsername] = useState("Elisee");
@@ -22,10 +22,11 @@ const Login = () => {
   const handSubmit = (e) => {
     e.preventDefault();
     console.log(credentials);
-    axios
-      .post("http://localhost:8000/auth/login", credentials)
+    accountService
+      .login(credentials)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
+        accountService.saveToken(res.data.access_token);
         navigate("/admin");
       })
       .catch((error) => console.log(error));
